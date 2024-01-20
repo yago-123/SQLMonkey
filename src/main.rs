@@ -19,7 +19,7 @@ fn main() {
 
     let mut buffer = String::new();
 
-    println!("Welcome to StellarStore!");
+    println!("Welcome to SQLMonkey!");
     while true {
         match io::stdin().read_line(&mut buffer) {
             Ok(n) => {

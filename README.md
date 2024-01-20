@@ -1,1 +1,1 @@
-# StellarStore
+# SQLMonkey :monkey:
