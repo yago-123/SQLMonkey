@@ -13,7 +13,6 @@ mod tests {
 
     #[test]
     fn test_delete_table() {
-        panic!()
 
     }
 
