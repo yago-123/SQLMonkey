@@ -1,24 +1,15 @@
+mod repl;
+mod interpreter;
+
 use std::io;
 use iota::iota;
+use crate::interpreter::{parse, semantic_analysis, tokenize};
+use crate::repl::{handle_input};
 
 enum MetaCommands {
     META_COMMAND_EXIT,
     META_COMMAND_CONTINUE,
 }
-
-iota! {
-    const SELECT: u8 = 0 << iota;
-        , INSERT
-        , FROM
-        , END_OF_DIRECTIVE
-}
-
-const SQLKeysStr: &[&str] = &[
-    "SELECT",
-    "INSERT",
-    "FROM",
-    "\n"
-];
 
 fn main() {
     let mut buffer = String::new();
@@ -47,33 +38,3 @@ fn main() {
     }
 }
 
-fn handle_input(buffer: &String) -> MetaCommands {
-    if buffer.contains(".exit") {
-        return MetaCommands::META_COMMAND_EXIT
-    }
-
-    return MetaCommands::META_COMMAND_CONTINUE
-}
-
-fn tokenize(buffer: &String) -> Vec<&str> {
-    return buffer.split(" ").collect()
-}
-
-fn parse(mut tokens: Vec<&str>) -> Vec<&str> {
-    for i in 0..tokens.len() {
-        for directive in SQLKeysStr {
-            if tokens.get(i) == Some(directive) {
-                tokens[i] = directive;
-
-            }
-        }
-    }
-
-    return tokens
-}
-
-fn semantic_analysis(tokens: Vec<&str>) -> bool {
-
-
-    return true
-}
