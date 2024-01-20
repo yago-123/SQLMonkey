@@ -1,10 +1,12 @@
 mod repl;
 mod interpreter;
+mod db;
 
 use std::io;
 use iota::iota;
 use crate::interpreter::{parse, semantic_analysis, tokenize};
 use crate::repl::{handle_input};
+use crate::db::{DB, Table};
 
 enum MetaCommands {
     META_COMMAND_EXIT,
@@ -12,7 +14,11 @@ enum MetaCommands {
 }
 
 fn main() {
+    let mut db = DB::new();
+    db.create_table("table".to_string());
+
     let mut buffer = String::new();
+
     println!("Welcome to StellarStore!");
     while true {
         match io::stdin().read_line(&mut buffer) {
@@ -20,10 +26,10 @@ fn main() {
                 match handle_input(&buffer) {
                     MetaCommands::META_COMMAND_CONTINUE => {
                         let tokenized = tokenize(&buffer);
-                        let parsed = parse(tokenized);
-                        println!("{:?}", parsed);
-                        let analyzed = semantic_analysis(parsed);
-                        println!("{:?}", analyzed);
+                        //let parsed = parse(tokenized);
+                        // println!("{:?}", parsed);
+                        // let analyzed = semantic_analysis(parsed);
+                        // println!("{:?}", analyzed);
                     }
                     MetaCommands::META_COMMAND_EXIT => return,
                 }
