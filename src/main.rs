@@ -1,9 +1,9 @@
 mod repl;
 mod interpreter;
 mod db;
+mod pager;
 
 use std::io;
-use iota::iota;
 use crate::interpreter::{parse, semantic_analysis, tokenize};
 use crate::repl::{handle_input};
 use crate::db::{DB, Table};

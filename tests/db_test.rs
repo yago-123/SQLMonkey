@@ -12,8 +12,7 @@ mod tests {
         // create table and drop database
         db.create_table(&"table-1".to_string());
         db.drop_db();
-
-        assert_eq!(db.retrieve_table_names().len(), 0)
+        assert_eq!(db.retrieve_table_names().len(), 0);
     }
 
     #[test]

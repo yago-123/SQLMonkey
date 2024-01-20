@@ -1,25 +1,45 @@
+use crate::pager::{Page, Pager};
 use std::collections::HashMap;
+use std::collections::BTreeMap;
+use uuid::Uuid;
 
 const MAX_LENGTH_STRING: u32 = 100;
 
+
 pub struct Row {
-    Id: u32,
-    Key: String,
-    Value: String,
+    id: u32,
+    key: String,
+    value: String,
+    // ...
+    // Stored in pages
 }
 
-pub struct Table{
-    Rows: Vec<Row>,
+pub struct Table {
+    rows: Vec<Row>,
+    // contains table data sorted (primary key)
+    btree: BTreeMap<String, String>,
+}
+
+pub struct MasterTable {
+    // contains information of other tables, indexes...
+}
+
+pub struct FileHeader {
+    path: Uuid,
+    page_size: u32,
 }
 
 pub struct DB {
-    pub Tables: HashMap<String, Table>,
+    tables: HashMap<String, Table>,
+    persistence: FileHeader,
+    pager: Pager,
 }
 
 impl Table {
     pub fn new() -> Table {
         Table{
-            Rows: Vec::new(),
+            rows: Vec::new(),
+            btree: BTreeMap::new(),
         }
     }
 
@@ -32,35 +52,46 @@ impl Table {
     }
 }
 
+impl FileHeader {
+    pub fn new() -> FileHeader {
+        FileHeader {
+            page_size: 0,
+            path: Uuid::max(),
+        }
+    }
+}
+
 impl DB {
     pub fn new() -> DB {
         DB {
-           Tables: HashMap::new(),
+           tables: HashMap::new(),
+            persistence: FileHeader::new(),
+            pager: Pager::new(),
         }
     }
 
     pub fn create_table(&mut self, name: &String) -> bool {
-        match self.Tables.contains_key(name) {
+        match self.tables.contains_key(name) {
             true => return false,
             false => {
                 // create new table
-                self.Tables.insert(name.clone(), Table::new());
+                self.tables.insert(name.clone(), Table::new());
                 return true
             }
         }
     }
 
     pub fn delete_table(&mut self, name: String) {
-        if let Some(table) = self.Tables.get(&name) {
-            self.Tables.remove_entry(&name);
+        if let Some(table) = self.tables.get(&name) {
+            self.tables.remove_entry(&name);
         }
     }
 
     pub fn retrieve_table_names(&self) -> Vec<String> {
-        return self.Tables.keys().cloned().collect()
+        return self.tables.keys().cloned().collect()
     }
 
     pub fn drop_db(&mut self) {
-        self.Tables = HashMap::new()
+        self.tables = HashMap::new()
     }
 }
