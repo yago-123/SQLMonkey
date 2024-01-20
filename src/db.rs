@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 
 const MAX_LENGTH_STRING: u32 = 100;
 
@@ -8,18 +9,16 @@ pub struct Row {
 }
 
 pub struct Table{
-    Name: String,
     Rows: Vec<Row>,
 }
 
 pub struct DB {
-    Tables: Vec<Table>,
+    Tables: HashMap<String, Table>,
 }
 
 impl Table {
-    pub fn new(name: String) -> Table {
+    pub fn new() -> Table {
         Table{
-            Name: name,
             Rows: Vec::new(),
         }
     }
@@ -36,19 +35,21 @@ impl Table {
 impl DB {
     pub fn new() -> DB {
         DB {
-           Tables: Vec::new(),
+           Tables: HashMap::new(),
         }
     }
 
     pub fn create_table(mut self, name: String) {
-        self.Tables.push(Table::new(name));
+        self.Tables.insert(name, Table::new());
     }
 
     pub fn delete_table(mut self, name: String) {
-
+        if let Some(table) = self.Tables.get(&name) {
+            self.Tables.remove_entry(&name);
+        }
     }
 
     pub fn drop_db(mut self) {
-        self.Tables = Vec::new()
+        self.Tables = HashMap::new()
     }
 }
