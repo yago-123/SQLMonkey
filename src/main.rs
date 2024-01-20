@@ -15,7 +15,7 @@ enum MetaCommands {
 
 fn main() {
     let mut db = DB::new();
-    db.create_table("table".to_string());
+    db.create_table(&"table".to_string());
 
     let mut buffer = String::new();
 

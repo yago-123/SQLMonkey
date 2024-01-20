@@ -13,7 +13,7 @@ pub struct Table{
 }
 
 pub struct DB {
-    Tables: HashMap<String, Table>,
+    pub Tables: HashMap<String, Table>,
 }
 
 impl Table {
@@ -39,17 +39,28 @@ impl DB {
         }
     }
 
-    pub fn create_table(mut self, name: String) {
-        self.Tables.insert(name, Table::new());
+    pub fn create_table(&mut self, name: &String) -> bool {
+        match self.Tables.contains_key(name) {
+            true => return false,
+            false => {
+                // create new table
+                self.Tables.insert(name.clone(), Table::new());
+                return true
+            }
+        }
     }
 
-    pub fn delete_table(mut self, name: String) {
+    pub fn delete_table(&mut self, name: String) {
         if let Some(table) = self.Tables.get(&name) {
             self.Tables.remove_entry(&name);
         }
     }
 
-    pub fn drop_db(mut self) {
+    pub fn retrieve_table_names(&self) -> Vec<String> {
+        return self.Tables.keys().cloned().collect()
+    }
+
+    pub fn drop_db(&mut self) {
         self.Tables = HashMap::new()
     }
 }
