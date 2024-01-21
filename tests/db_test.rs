@@ -1,5 +1,6 @@
 #[path = "../src/db.rs"] mod db;
-
+#[path = "../src/pager.rs"] mod pager;
+#[path = "../src/table.rs"] mod table;
 
 #[cfg(test)]
 mod tests {

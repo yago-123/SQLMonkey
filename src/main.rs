@@ -1,12 +1,14 @@
 mod repl;
 mod interpreter;
+mod table;
 mod db;
+mod encoding;
 mod pager;
 
 use std::io;
 use crate::interpreter::{parse, semantic_analysis, tokenize};
 use crate::repl::{handle_input};
-use crate::db::{DB, Table};
+use crate::db::{DB};
 
 enum MetaCommands {
     META_COMMAND_EXIT,
