@@ -51,11 +51,14 @@ fn main() {
     db.create_table(&"table".to_string());
      */
 
-    let pager = Pager::new();
-    match pager.insert_row(vec!['a', 'b', 'c']) {
+    let mut pager = Pager::new();
+    match pager.insert_row(vec![b'a', b'b', b'c']) {
         Ok(value) => println!("Inserted row correctly!"),
         Err(error) => println!("Error inserting row: {}", error)
     }
 
+    match pager.insert_row_in_position(vec![b'a', b'b', b'c'], 100) {
+        Ok(value) => println!("Inserted row correctly!"),
+        Err(error) => println!("Error inserting row: {}", error)
+    }
 }
-

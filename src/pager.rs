@@ -1,4 +1,4 @@
-use std::fmt::Error;
+
 use uuid::Uuid;
 use std::fs::{File, OpenOptions};
 use std::io::{Seek, SeekFrom, Write};
@@ -7,7 +7,7 @@ const MAX_NUMBER_PAGES: usize = 1000;
 const PAGE_SIZE: usize = 4096;
 
 pub struct Page {
-    data: Vec<char>,
+    data: Vec<u8>,
 }
 
 pub struct Pager {
@@ -53,7 +53,7 @@ impl Pager {
 
     }
 
-    pub fn insert_row(mut self, data: Vec<char>) -> Result<usize, String> {
+    pub fn insert_row(&mut self, data: Vec<u8>) -> Result<usize, String> {
         let mut cursor: usize;
 
         // search free space in order to acomodate data, otherwise, create new page
@@ -69,16 +69,18 @@ impl Pager {
         return Ok(cursor);
     }
 
-    pub fn insert_row_in_position(&mut self, data: Vec<char>, cursor: usize) {
-        self.persistence.file.seek(SeekFrom::Start(cursor as u64));
-        return self.persistence.file.write_all(data.as_bytes())?;
+    pub fn insert_row_in_position(&mut self, data: Vec<u8>, cursor: usize) -> Result<(), std::io::Error> {
+        // check if page is in use and place lock (future)
+        self.persistence.file.seek(SeekFrom::Start(cursor as u64))?;
+        self.persistence.file.write_all(data.as_ref())?;
+
+        Ok(())
     }
 
 
     fn create_page(&mut self) -> Result<usize, String> {
         if self.pages.len() < MAX_NUMBER_PAGES {
-            let page = Page::new();
-            self.pages.push(page);
+            self.pages.push(Page::new());
             return Ok(self.pages.len() - 1)
         }
 
@@ -94,7 +96,7 @@ impl Pager {
         return None
     }
 
-    fn commit_page(mut self, num_page: u64, content: Vec<char>) {
+    fn commit_page(mut self, num_page: u64, content: &[u8]) {
 
     }
 
