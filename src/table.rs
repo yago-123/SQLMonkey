@@ -10,16 +10,13 @@ pub struct Row {
 }
 
 pub struct Table {
-    rows: Vec<Row>,
-    // contains table data sorted (primary key)
-    btree: BTreeMap<String, String>,
+    btree: BTreeMap<u64, u64>,
     persistence: Pager,
 }
 
 impl Table {
     pub fn new() -> Table {
         Table{
-            rows: Vec::new(),
             persistence: Pager::new(),
             btree: BTreeMap::new(),
         }
@@ -30,6 +27,10 @@ impl Table {
     }
 
     pub fn retrieve_row() {
+        //
+    }
+
+    pub fn modify_record() {
 
     }
 }

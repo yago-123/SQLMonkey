@@ -6,6 +6,7 @@ iota! {
         , INSERT
         , FROM
         , INTO
+        , VACUUM
         , EQUAL
         , COMMA
         , END_OF_DIRECTIVE
@@ -16,6 +17,7 @@ const SQLKeysStr: &[&str] = &[
     "INSERT",
     "FROM",
     "INTO",
+    "VACUUM",
     "=",
     ",",
     "\n"
