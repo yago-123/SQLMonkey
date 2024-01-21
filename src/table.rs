@@ -1,5 +1,5 @@
 use std::collections::BTreeMap;
-use crate::pager::Pager;
+use crate::pager::{Page, Pager};
 
 pub struct Row {
     id: u32,
@@ -15,11 +15,13 @@ pub struct Table {
 }
 
 impl Table {
-    pub fn new() -> Table {
-        Table{
-            persistence: Pager::new(),
+    pub fn new() -> Result<Table, String> {
+        let persistence = Pager::new(None).map_err(|error| format!("error creating Pager: {}", error))?;
+
+        Ok(Table {
+            persistence,
             btree: BTreeMap::new(),
-        }
+        })
     }
 
     pub fn insert_row() {

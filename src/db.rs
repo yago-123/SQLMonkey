@@ -13,25 +13,26 @@ pub struct MasterTable {
 
 pub struct DB {
     tables: HashMap<String, Table>,
-    pager: Pager,
 }
 
 impl DB {
     pub fn new() -> DB {
         DB {
            tables: HashMap::new(),
-            pager: Pager::new(),
         }
     }
 
-    pub fn create_table(&mut self, name: &String) -> bool {
-        match self.tables.contains_key(name) {
-            true => return false,
-            false => {
-                // create new table
-                self.tables.insert(name.clone(), Table::new());
-                return true
-            }
+    pub fn create_table(&mut self, name: &String) -> Result<(), String> {
+        if self.tables.contains_key(name) {
+            return Err("".to_string())
+        }
+
+        match Table::new() {
+            Ok(t) => {
+                self.tables.insert(name.clone(), t);
+                Ok(())
+            },
+            Err(error) => Err("".to_string()),
         }
     }
 
