@@ -1,7 +1,8 @@
-
+use std::cmp::Ordering;
 use uuid::Uuid;
 use std::fs::{File, OpenOptions};
 use std::io::{Seek, SeekFrom, Write};
+use crate::freelist::FreeList;
 
 const MAX_NUMBER_PAGES: usize = 1000;
 const PAGE_SIZE: usize = 4096;
@@ -14,11 +15,6 @@ pub struct Pager {
     pages: Vec<Page>,
     persistence: FileHeader,
     freelist: FreeList,
-}
-
-/// Contains cursor and space of empty spaces, to be used by VACUUM directive and insert
-pub struct FreeList {
-
 }
 
 /// Contains file that persists the pages
@@ -37,7 +33,7 @@ impl Page {
 
 impl Pager {
     pub fn new(datastore: Option<String>) -> Result<Pager, String> {
-        // Reserve initial pages for metadata
+        // todo: reserve initial pages for metadata
 
         // Attempt to create a new FileHeader
         let persistence = FileHeader::new(datastore)
@@ -75,6 +71,11 @@ impl Pager {
         Ok(())
     }
 
+    pub fn delete_row_from_position(&mut self, cursor: usize, size: usize) {
+        // just remove from FreeList, no need to overwrite, just use a clustered index
+
+
+    }
 
     fn create_page(&mut self) -> Result<usize, String> {
         if self.pages.len() < MAX_NUMBER_PAGES {
@@ -101,6 +102,10 @@ impl Pager {
     pub fn flush() {
 
     }
+
+    pub fn compact() {
+
+    }
 }
 
 impl FileHeader {
@@ -123,14 +128,6 @@ impl FileHeader {
                 file: file,
             }),
             Err(error) => Err(format!("error creating file header, {}", error)),
-        }
-    }
-}
-
-impl FreeList {
-    pub fn new() -> FreeList {
-        FreeList {
-
         }
     }
 }

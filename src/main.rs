@@ -4,13 +4,10 @@ mod table;
 mod db;
 mod encoding;
 mod pager;
+mod freelist;
 
 use crate::pager::Pager;
 
-enum MetaCommands {
-    META_COMMAND_EXIT,
-    META_COMMAND_CONTINUE,
-}
 
 fn main() {
     let mut pager: Pager;
