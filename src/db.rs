@@ -1,5 +1,3 @@
-
-use crate::pager::Pager;
 use crate::table::Table;
 use std::collections::HashMap;
 
