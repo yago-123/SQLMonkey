@@ -1,7 +1,10 @@
 use std::cmp::Ordering;
-use uuid::Uuid;
+use std::collections::HashMap;
+use uuid::{Error, Uuid};
 use std::fs::{File, OpenOptions};
 use std::io::{empty, Seek, SeekFrom, Write};
+use std::os::unix::fs::FileExt;
+use std::{io, vec};
 use crate::freelist::FreeList;
 
 const MAX_NUMBER_PAGES: usize = 1000;
@@ -14,6 +17,7 @@ pub struct Page {
 
 pub struct Pager {
     pages: Vec<Page>,
+    cached_pages: HashMap<usize, Page>,
     persistence: FileHeader,
     freelist: FreeList,
 }
@@ -44,6 +48,7 @@ impl Pager {
         // Create a new Pager with initialized fields
         Ok(Pager {
             pages: Vec::with_capacity(MAX_NUMBER_PAGES),
+            cached_pages: HashMap::new(),
             persistence,
             freelist: FreeList::new(),
         })
@@ -67,10 +72,6 @@ impl Pager {
         return Ok(cursor);
     }
 
-    pub fn insert_bulk_rows() {
-
-    }
-
     fn insert_row_in_position(&mut self, data: Vec<u8>, cursor: usize) -> Result<(), std::io::Error> {
         // todo(concurrency): check if page is in use and place lock (future)
         // todo(cache): check if the cache is catched
@@ -78,6 +79,29 @@ impl Pager {
         self.persistence.file.write_all(data.as_ref())?;
 
         Ok(())
+    }
+
+    pub fn retrieve_row(&mut self, cursor: usize, space: usize) -> Result<Vec<u8>, std::io::Error> {
+        // todo(buffer): use a fixed buffer instead of a vec
+        let mut buffer = Vec::with_capacity(space);
+
+        // todo: handle the error and returns
+        self.persistence.file.seek(SeekFrom::Start(cursor as u64));
+        self.persistence.file.read_at(&mut buffer.as_mut_slice(), cursor as u64)?;
+
+        return Ok(buffer)
+    }
+
+    pub fn insert_bulk_rows() {
+
+    }
+
+    fn write_to_page() {
+
+    }
+
+    fn read_from_page() {
+
     }
 
     fn delete_row_from_position(&mut self, cursor: usize, space: usize) {
@@ -100,7 +124,7 @@ impl Pager {
     }
 
     pub fn flush_page() {
-        
+
     }
 
     pub fn compact() {
